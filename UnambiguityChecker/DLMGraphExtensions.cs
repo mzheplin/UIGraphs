@@ -5,25 +5,18 @@ namespace UnambiguityChecker
 	{
 		public static bool IsDeterministic(this DLMGraph graph)
 		{
-            foreach (var vertex in graph.Vertices)
-            {
-                var localEdges = graph.Edges.Where(edge => edge.Tail == vertex).ToList();
+            var duplicateEdges = graph.Edges
+                                .GroupBy(edge => new { edge.Tail, edge.Label }) 
+                                .Where(group => group.Count() > 1) 
+                                .SelectMany(group => group); 
 
-                var edgeNum = localEdges.Count();
-                if (edgeNum < 2) continue;
+            return !duplicateEdges.Any();
+		}
 
-                for (int i = 0; i < edgeNum; i++)
-                {
-                    for (int j = i + 1; j < edgeNum; j++)
-                    {
-                        if (localEdges[i].Label == localEdges[j].Label
-                           && localEdges[i].Head != localEdges[j].Head)
-                            return false;
-                    }
-                }
-            }
-            return true;
+
+		public static DLMGHomomorphism GenerateIsomorphic(this DLMGraph graph)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
-

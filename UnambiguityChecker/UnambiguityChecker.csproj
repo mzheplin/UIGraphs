@@ -9,4 +9,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Categories\Categories.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Examples\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Examples\" />
+  </ItemGroup>
 </Project>
