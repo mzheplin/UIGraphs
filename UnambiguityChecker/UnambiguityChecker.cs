@@ -5,8 +5,7 @@ namespace UnambiguityChecker
 {
     public static class UnambiguityChecker
     {
-
-        public static bool IsPullbackUnambiguous(Pullback<DLMGraph> pullback)
+        public static bool IsPullbackStronglyUnambiguous(Pullback<DLMGraph> pullback)
         {
 
             var vertices = pullback.pullback.Vertices;
@@ -38,8 +37,9 @@ namespace UnambiguityChecker
 
             return c1 & c2;
         }
+        
 
-        public static bool DoConditionsHold(DLMGHomomorphism hom1, DLMGHomomorphism hom2)
+        public static bool DoStrongConditionsHold(DLMGHomomorphism hom1, DLMGHomomorphism hom2)
         {
             if (hom1.Target != hom2.Target)
                 throw new ArgumentException("targets of homomorphisms must be the same");
@@ -59,12 +59,6 @@ namespace UnambiguityChecker
                 var affVertex = affordnceGraph.Vertices.FirstOrDefault(
                     v => hom2.Vertex_Map[v] == hom1.Vertex_Map[actVertex]
                     );
-
-                if (affVertex is null)
-                {
-                    Console.WriteLine("pullback will not be complete");
-                    continue;
-                }
 
                 var actEdges = actionGraph.Edges.Where(e => e.Tail == actVertex).ToList();
                 var affEdges = affordnceGraph.Edges.Where(e => e.Tail == affVertex).ToList();
@@ -115,6 +109,144 @@ namespace UnambiguityChecker
             }
 
             return c1 && c2;
+        }
+
+        public static bool IsPullbackRelaxedUnambiguous(Pullback<DLMGraph> pullback)
+        {
+            var edges = pullback.pullback.Edges;
+
+            var visitedEdges = new List<DEdge>();
+
+            foreach (var edge in edges)
+            {
+                //change
+                if (visitedEdges.Any(e => e.Tail.Left == edge.Tail.Left 
+                && e.Right == edge.Right
+                && e.Head.Label != edge.Head.Label
+                ))
+                    return false;
+
+                if (visitedEdges.Any(e => e.Tail == edge.Tail
+                && e.Right == edge.Right
+                && e.Head != edge.Head
+                ))
+                    return false;
+
+                visitedEdges.Add(edge);
+            }
+
+            return true;
+        }
+        
+        public static bool IsPullbackGraphUnambiguous(DLMGraph pullback)
+        {
+            var edges = pullback.Edges;
+
+            var visitedEdges = new List<DEdge>();
+
+            foreach (var edge in edges)
+            {
+                //change
+                if (visitedEdges.Any(e => e.Tail.Left == edge.Tail.Left 
+                                          && e.Label == edge.Label
+                                          && e.Head.Left != edge.Head.Left
+                    ))
+                    return false;
+
+                if (visitedEdges.Any(e => e.Tail == edge.Tail
+                                          && e.Label == edge.Label
+                                          && e.Head != edge.Head
+                    ))
+                    return false;
+
+                visitedEdges.Add(edge);
+            }
+
+            return true;
+        }
+
+        public static bool DoRelaxedConditionsHold(DLMGHomomorphism hom1, DLMGHomomorphism hom2)
+        {
+            if (hom1.Target != hom2.Target)
+                throw new ArgumentException("targets of homomorphisms must be the same");
+
+            var actionGraph = hom1.Source;
+            var affordnceGraph = hom2.Source;
+            var abstractGraph = hom2.Target;
+
+            //condition 1
+            foreach(var actionEdge in actionGraph.Edges)
+            {
+                var abstractEdge = hom1.Edge_Map[actionEdge];
+
+                var affEdges = affordnceGraph.Edges.Where(e => hom2.Edge_Map[e] == abstractEdge);
+
+                var visitedEdges = new List<DEdge>();
+
+                foreach (var edge in affEdges)
+                {
+
+                    if (visitedEdges.Any(e => e.Tail == edge.Tail
+                    && e.Label == edge.Label
+                    && e.Head != edge.Head
+                    ))
+                    {
+                        Console.WriteLine($"condition 1 fails for action edge {actionEdge}");
+                        return false;
+                    }
+                        
+
+                    visitedEdges.Add(edge);
+                }
+            }
+
+            //condition 2
+
+            foreach (var actVertex in actionGraph.Vertices)
+            {
+                var actEdges = actionGraph.Edges.Where(e => e.Tail == actVertex).ToList();
+
+                for (int i = 0; i < actEdges.Count; i++)
+                {
+                    var act1 = actEdges[i];
+                    var aff1Edges = affordnceGraph.Edges
+                        .Where(e => hom2.Edge_Map[e] == hom1.Edge_Map[act1]);
+
+                    if (aff1Edges.Count() == 0) continue;
+
+                    for (int j = i + 1; j < actEdges.Count; j++)
+                    {
+                        var act2 = actEdges[j];
+
+                        if (act1.Head == act2.Head) continue;
+
+                        if (hom1.Edge_Map[act1] == hom1.Edge_Map[act2])
+                        {
+                            Console.WriteLine($"morphisms are the same for action edges {act1} and {act2}");
+                            return false;
+                        }
+
+                        var aff2Edges = affordnceGraph.Edges
+                            .Where(e => hom2.Edge_Map[e] == hom1.Edge_Map[act2]);
+
+                        if (aff2Edges.Count() == 0) continue;
+
+                        foreach (var aff1 in aff1Edges)
+                        {
+                            foreach (var aff2 in aff2Edges)
+                            {
+                                if (aff1.Label == aff2.Label)
+                                {
+                                    Console.WriteLine($"affordance labels are for action edges {act1} and {act2}");
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

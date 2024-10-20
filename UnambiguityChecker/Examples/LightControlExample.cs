@@ -150,8 +150,14 @@ namespace UnambiguityChecker.Examples
 
             var pullback = category.GetPullback(ac_ab, af_ab);
             Console.WriteLine(pullback.pullback);
-            Console.WriteLine(UnambiguityChecker.DoConditionsHold(ac_ab, af_ab));
-            Console.WriteLine(UnambiguityChecker.IsPullbackUnambiguous(pullback));
+            Console.WriteLine("Relaxed conditions");
+            Console.WriteLine(UnambiguityChecker.DoRelaxedConditionsHold(ac_ab, af_ab));
+            Console.WriteLine("Relaxed pullback");
+            Console.WriteLine(UnambiguityChecker.IsPullbackRelaxedUnambiguous(pullback));
+            Console.WriteLine("Strong conditions");
+            Console.WriteLine(UnambiguityChecker.DoStrongConditionsHold(ac_ab, af_ab));
+            Console.WriteLine("Strong pullback");
+            Console.WriteLine(UnambiguityChecker.IsPullbackStronglyUnambiguous(pullback));
 
         }
 
@@ -531,8 +537,14 @@ namespace UnambiguityChecker.Examples
             var pullback = category.GetPullback(ac_ab, af_ab);
 
             Console.WriteLine(pullback.pullback);
-            Console.WriteLine(UnambiguityChecker.DoConditionsHold(ac_ab, af_ab));
-            Console.WriteLine(UnambiguityChecker.IsPullbackUnambiguous(pullback));
+            Console.WriteLine("Relaxed conditions");
+            Console.WriteLine(UnambiguityChecker.DoRelaxedConditionsHold(ac_ab, af_ab));
+            Console.WriteLine("Relaxed pullback");
+            Console.WriteLine(UnambiguityChecker.IsPullbackRelaxedUnambiguous(pullback));
+            Console.WriteLine("Strong conditions");
+            Console.WriteLine(UnambiguityChecker.DoStrongConditionsHold(ac_ab, af_ab));
+            Console.WriteLine("Strong pullback");
+            Console.WriteLine(UnambiguityChecker.IsPullbackStronglyUnambiguous(pullback));
         }
 
 
@@ -764,8 +776,14 @@ namespace UnambiguityChecker.Examples
             var pullback = category.GetPullback(ac_ab, af_ab);
 
             Console.WriteLine(pullback.pullback);
-            Console.WriteLine(UnambiguityChecker.DoConditionsHold(ac_ab, af_ab));
-            Console.WriteLine(UnambiguityChecker.IsPullbackUnambiguous(pullback));
+            Console.WriteLine("Relaxed conditions");
+            Console.WriteLine(UnambiguityChecker.DoRelaxedConditionsHold(ac_ab, af_ab));
+            Console.WriteLine("Relaxed pullback");
+            Console.WriteLine(UnambiguityChecker.IsPullbackRelaxedUnambiguous(pullback));
+            Console.WriteLine("Strong conditions");
+            Console.WriteLine(UnambiguityChecker.DoStrongConditionsHold(ac_ab, af_ab));
+            Console.WriteLine("Strong pullback");
+            Console.WriteLine(UnambiguityChecker.IsPullbackStronglyUnambiguous(pullback));
         }
     }
 }

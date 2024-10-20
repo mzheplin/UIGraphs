@@ -12,11 +12,5 @@ namespace UnambiguityChecker
 
             return !duplicateEdges.Any();
 		}
-
-
-		public static DLMGHomomorphism GenerateIsomorphic(this DLMGraph graph)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }
