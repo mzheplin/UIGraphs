@@ -1,5 +1,4 @@
 # UnambiguityChecker
-
 The **UnambiguityChecker** is a class library designed to check the unambiguity conditions on pullback graphs and diagrams in the context of user interfaces (UIs). It is built on top of the **Categories** class library, which provides the necessary graph and category theory abstractions.
 
 ## Unambiguity Theory
@@ -14,43 +13,44 @@ User interfaces (UIs) can be represented as pullbacks in the category of directe
 
 #### Definitions and Theorems
 
-1. **Local Injectivity**: A graph morphism \(f: \Gamma \rightarrow \Phi\) is said to be *locally injective* with respect to edge labels if:
-   $$
-   \forall v \in V_{\Gamma} \quad \forall e_1, e_2 \in E^{[v, -]}_{\Gamma}: \quad
-   \lambda_{\Gamma}(e_1) \neq \lambda_{\Gamma}(e_2) \implies f^{label}(\lambda_{\Gamma}(e_1)) \neq f^{label}(\lambda_{\Gamma}(e_2))
-   $$
+1. **Local Injectivity**: A graph morphism f is said to be *locally injective* with respect to edge labels if:
+
+   ![Local Injectivity](https://latex.codecogs.com/svg.latex?%5Cforall%20v%20%5Cin%20V_%7B%5CGamma%7D%20%5Cquad%20%5Cforall%20e_1%2C%20e_2%20%5Cin%20E%5E%7B%5Bv%2C%20-%5D%7D_%7B%5CGamma%7D%3A%20%5Cquad%20%5Clambda_%7B%5CGamma%7D%28e_1%29%20%5Cneq%20%5Clambda_%7B%5CGamma%7D%28e_2%29%20%5Cimplies%20f%5E%7Blabel%7D%28%5Clambda_%7B%5CGamma%7D%28e_1%29%29%20%5Cneq%20f%5E%7Blabel%7D%28%5Clambda_%7B%5CGamma%7D%28e_2%29%29)
+
    This ensures that edges with the same source vertex cannot have the same label unless they also share the same target vertex.
 
-2. **Determinism of DLMG**: A directed labeled multigraph \(\Gamma\) is *deterministic* if:
-   $$
-   \forall v \in V_{\Gamma} \quad \forall e_1, e_2 \in E^{[v,-]}_{\Gamma}: \quad
-   \lambda_{\Gamma}(e_1) \neq \lambda_{\Gamma}(e_2) \lor \tau_{\Gamma}(e_1) = \tau_{\Gamma}(e_2)
-   $$
+2. **Determinism of DLMG**: A directed labeled multigraph Gamma is *deterministic* if:
+
+   ![Determinism of DLMG](https://latex.codecogs.com/svg.latex?%5Cforall%20v%20%5Cin%20V_%7B%5CGamma%7D%20%5Cquad%20%5Cforall%20e_1%2C%20e_2%20%5Cin%20E%5E%7B%5Bv%2C%20-%5D%7D_%7B%5CGamma%7D%3A%20%5Cquad%20%5Clambda_%7B%5CGamma%7D%28e_1%29%20%5Cneq%20%5Clambda_%7B%5CGamma%7D%28e_2%29%20%5Clor%20%5Ctau_%7B%5CGamma%7D%28e_1%29%20%3D%20%5Ctau_%7B%5CGamma%7D%28e_2%29)
+
    This ensures that if two edges from the same vertex have different labels, they must lead to the same target vertex, enforcing consistency in state transitions.
 
 #### Unambiguity of a UI Pullback
 
-A user interface (UI) represented as a **pullback graph** \(P\) over a diagram \(A \xrightarrow{\text{f}} M \xleftarrow{g} D\) with morphisms \(\pi_A\) and \(\pi_D\) is **unambiguous** if the following conditions hold:
+A user interface (UI) represented as a **pullback graph** P over a diagram
+![Link to Formula](https://latex.codecogs.com/svg.latex?A%20%5C%5C%20%5Ctext%7Bf%7D%20%5Cto%20M%20%5Cleftarrow%20g%20%5C%5C%20D)
 
-- For any two edges \(e_1\) and \(e_2\) in the pullback graph \(P\) with the same source in state \(s \in V_A\), if their labels are equal, their targets must be in the same state \(s' \in V_A\).
+with morphisms pi_A and pi_D is **unambiguous** if the following conditions hold:
 
-- If the edges \(e_1\) and \(e_2\) have the same source, their labels must match, and their targets must also be identical.
+- For any two edges e_1 and e_2 in the pullback graph P with the same source in state s in V_A, if their labels are equal, their targets must be in the same state s' in V_A.
+
+- If the edges e_1 and e_2 have the same source, their labels must match, and their targets must also be identical.
 
 This ensures that there is no confusion or uncertainty in the actions that the UI affords to the user.
 
 #### Theorem: Unambiguity of an Interface Pullback
 
-A UI pullback \(P\) is unambiguous if and only if the following **diagram conditions** hold:
+A UI pullback P is unambiguous if and only if the following **diagram conditions** hold:
 
-1. **Uniqueness**: For any edge \(e_A \in E_A\), there exists no more than one edge \(e_D \in E_D\) such that the edge labels match.
+1. **Uniqueness**: For any edge e_A in E_A, there exists no more than one edge e_D in E_D such that the edge labels match.
 
-2. **Splitting Coherence**: If two edges \(e_1^{A}, e_2^{A} \in E_A^{[v_A, -]}\) have different targets in the action graph \(A\), then:
-   $$
-   \tau_A(e_1^{A}) \neq \tau_A(e_2^{A}) \implies
-   f^{edge}(e_1^{A}) \neq f^{edge}(e_2^{A}) \quad \land \quad
-   \lambda_D(e_1^{D}) \neq \lambda_D(e_2^{D})
-   $$
-   This ensures that distinct transitions between states are always represented by distinct affordances in the affordance graph \(D\).
+2. **Splitting Coherence**: If two edges
+   ![Link to Formula](https://latex.codecogs.com/svg.latex?e_1%5E%7BA%7D%2C%20e_2%5E%7BA%7D%20%5Cin%20E_A%5E%7B%5Bv_A%2C%20-%5D%7D)
+have different targets in the action graph A, then:
+
+   ![Splitting Coherence](https://latex.codecogs.com/svg.latex?%5Ctau_A%28e_1%5E%7BA%7D%29%20%5Cneq%20%5Ctau_A%28e_2%5E%7BA%7D%29%20%5Cimplies%20f%5E%7Bedge%7D%28e_1%5E%7BA%7D%29%20%5Cneq%20f%5E%7Bedge%7D%28e_2%5E%7BA%7D%29%20%5Cquad%20%5Cland%20%5C%5Clambda_D%28e_1%5E%7BD%7D%29%20%5Cneq%20%5Clambda_D%28e_2%5E%7BD%7D%29)
+
+   This ensures that distinct transitions between states are always represented by distinct affordances in the affordance graph $D$.
 
 These conditions help guarantee that actions within the UI are consistent, without any conflicting or redundant effects.
 
@@ -60,15 +60,18 @@ In some interfaces, only one representation exists for each state. Such interfac
 
 #### Definition: Single-Context Interface
 
-Let \(P\) be a pullback graph over a diagram \(A \xrightarrow{\text{f}} M \xleftarrow{g} D\) with morphisms \(\pi_A\) and \(\pi_D\). \(P\) is a **single-context interface** if:
-$$
-\forall v_1, v_2 \in V_P: \quad \pi_A^{vertex}(v_1) = \pi_A^{vertex}(v_2) \implies \pi_D^{vertex}(v_1) = \pi_D^{vertex}(v_2)
-$$
+Let P be **pullback graph** over a diagram
+![LinkDiagram](https://latex.codecogs.com/svg.latex?A%20%5C%5C%20%5Ctext%7Bf%7D%20%5Cto%20M%20%5Cleftarrow%20g%20%5C%5C%20D)
+
+with morphisms pi_A and pi_D. P is a **single-context interface** if:
+
+![Single-Context Interface](https://latex.codecogs.com/svg.latex?%5Cforall%20v_1%2C%20v_2%20%5Cin%20V_P%3A%20%5Cquad%20%5Cpi_A%5E%7Bvertex%7D%28v_1%29%20%3D%20%5Cpi_A%5E%7Bvertex%7D%28v_2%29%20%5Cimplies%20%5Cpi_D%5E%7Bvertex%7D%28v_1%29%20%3D%20%5Cpi_D%5E%7Bvertex%7D%28v_2%29)
+
 This condition ensures that each state is uniquely represented by a single context in the interface.
 
 #### Proposition: Single-Context Interface
 
-A pullback graph \(P\) is a **single-context interface** if and only if the morphism \(g\) is injective on vertices.
+A pullback graph P is a **single-context interface** if and only if the morphism g is injective on vertices.
 
 ### When Ambiguity is Detected
 
@@ -81,6 +84,8 @@ Unambiguity conditions help identify and address ambiguities in interface design
 3. **Limited Number of Affordances**: When a single affordance performs multiple actions, it increases the cognitive load on users. It is recommended to introduce more affordances or representations to simplify the interface and make it more intuitive.
 
 By understanding and addressing these sources of ambiguity, we can design interfaces that are more clear, intuitive, and unambiguous for users.
+
+
 
 ## Installation
 
