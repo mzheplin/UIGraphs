@@ -5,19 +5,18 @@ namespace UnambiguityChecker
 {
     public static class UnambiguityChecker
     {
-        public static bool IsPullbackStronglyUnambiguous(Pullback<DLMGraph> pullback)
+        public static bool IsSingleContextPullbackUnambiguous(Pullback<DLMGraph> pullback)
         {
 
             var vertices = pullback.pullback.Vertices;
             var edges = pullback.pullback.Edges;
             var c1 = true;
             var c2 = true;
-
-            // Condition 1
+            
             if (vertices.SelectMany((v, i) => vertices.Skip(i + 1).Select(v2 => (v, v2)))
                 .Any(pair => pair.v.Left == pair.v2.Left && pair.v.Right != pair.v2.Right))
             {
-                Console.WriteLine("condition 1 fails");
+                Console.WriteLine("The graph is not a single context interface representation.");
                 c1 = false;
             }
 
@@ -31,15 +30,14 @@ namespace UnambiguityChecker
                 );
             }))
             {
-                Console.WriteLine("condition 2 fails");
+                Console.WriteLine("Ambiguity is detected.");
                 c2 = false;
             }
 
             return c1 & c2;
         }
-        
 
-        public static bool DoStrongConditionsHold(DLMGHomomorphism hom1, DLMGHomomorphism hom2)
+        public static bool DoSingleContextConditionsHold(DLMGHomomorphism hom1, DLMGHomomorphism hom2)
         {
             if (hom1.Target != hom2.Target)
                 throw new ArgumentException("targets of homomorphisms must be the same");
@@ -111,7 +109,7 @@ namespace UnambiguityChecker
             return c1 && c2;
         }
 
-        public static bool IsPullbackRelaxedUnambiguous(Pullback<DLMGraph> pullback)
+        public static bool IsPullbackUnambiguous(Pullback<DLMGraph> pullback)
         {
             var edges = pullback.pullback.Edges;
 
@@ -137,35 +135,8 @@ namespace UnambiguityChecker
 
             return true;
         }
-        
-        public static bool IsPullbackGraphUnambiguous(DLMGraph pullback)
-        {
-            var edges = pullback.Edges;
 
-            var visitedEdges = new List<DEdge>();
-
-            foreach (var edge in edges)
-            {
-                //change
-                if (visitedEdges.Any(e => e.Tail.Left == edge.Tail.Left 
-                                          && e.Label == edge.Label
-                                          && e.Head.Left != edge.Head.Left
-                    ))
-                    return false;
-
-                if (visitedEdges.Any(e => e.Tail == edge.Tail
-                                          && e.Label == edge.Label
-                                          && e.Head != edge.Head
-                    ))
-                    return false;
-
-                visitedEdges.Add(edge);
-            }
-
-            return true;
-        }
-
-        public static bool DoRelaxedConditionsHold(DLMGHomomorphism hom1, DLMGHomomorphism hom2)
+        public static bool DoConditionsHold(DLMGHomomorphism hom1, DLMGHomomorphism hom2)
         {
             if (hom1.Target != hom2.Target)
                 throw new ArgumentException("targets of homomorphisms must be the same");
@@ -244,6 +215,33 @@ namespace UnambiguityChecker
                         }
                     }
                 }
+            }
+
+            return true;
+        }
+        
+        public static bool IsPullbackGraphUnambiguous(DLMGraph pullback)
+        {
+            var edges = pullback.Edges;
+
+            var visitedEdges = new List<DEdge>();
+
+            foreach (var edge in edges)
+            {
+                //change
+                if (visitedEdges.Any(e => e.Tail.Left == edge.Tail.Left 
+                                          && e.Label == edge.Label
+                                          && e.Head.Left != edge.Head.Left
+                    ))
+                    return false;
+
+                if (visitedEdges.Any(e => e.Tail == edge.Tail
+                                          && e.Label == edge.Label
+                                          && e.Head != edge.Head
+                    ))
+                    return false;
+
+                visitedEdges.Add(edge);
             }
 
             return true;
